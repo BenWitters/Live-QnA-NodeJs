@@ -1,0 +1,36 @@
+.homePage h1{
+  color: $RobinsEggBlue
+}
+
+.topic{
+  background-color: #595959;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.topic:first-child{
+  margin-top: 20px;
+}
+
+.topic h2{
+  color: $RobinsEggBlue;
+  margin: 0;
+  padding: 0;
+}
+.topic a{
+  text-decoration: none;
+}
+.info{
+  color: $RobinsEggBlue;
+  font-size: 1.7rem;
+  padding-top: 5px;
+}
+
+.topic:hover{
+  background-color: #6a6a6a;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -ms-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}

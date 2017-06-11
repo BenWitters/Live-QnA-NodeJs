@@ -1,0 +1,45 @@
+doctype html
+html
+  head
+    title #{title}
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', integrity='sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7', crossorigin='anonymous')
+    link( rel='stylesheet', href='/stylesheets/css/style.css')
+
+  body
+    nav.navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') Live Q&A App
+        #navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            if user
+              li(class=(title === 'Live Q&A app' ? 'active' : ''))
+                a(href='/') Home
+              li(class=(title === 'Nieuwe discussie - Live Q&A app' ? 'active' : ''))
+                a(href='/discussion/create') Nieuwe discussie
+              // if user is not logged in
+          ul.nav.navbar-nav.navbar-right
+            if !user
+              li(class=(title === 'Registreer - Live Q&A app' ? 'active' : ''))
+                a(href='/users/register') Registreer
+              li(class=(title === 'Login - Live Q&A app' ? 'active' : ''))
+                a(href='/users/login') Inloggen
+          ul.nav.navbar-nav.navbar-right
+            // als user wel aangemeld is
+            if user
+              li
+                a(href='/users/logout') Afmelden
+    .container
+      != messages()
+      block content
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js', integrity='sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS', crossorigin='anonymous')

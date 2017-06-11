@@ -1,0 +1,12 @@
+// layout wraps around index page
+extends layout
+
+block content
+  div(class="homePage")
+    h1= 'Discussies'
+      if topics
+        each topic, i in topics
+          div(class="topic")
+            a.goToTopic(href='/discussion/#{topic._id}')
+              h2=topic.title
+              p.info Discussie aangemaakt door #{topic.author} op #{moment(topic.date).format("DD-MM-YYYY")} om #{moment(topic.date).format("Humm")}.

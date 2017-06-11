@@ -1,0 +1,14 @@
+extends layout
+block content
+    div(class="form")
+        h1 Login
+        p Log in om nieuwe topics te starten, vragen te stellen en om te reageren op gestelde vragen.
+        form(class="loginForm" method='post', action='/users/login', enctype='multiparse/form-data')
+            .form-group
+                input.form-control(name='username', type='text', placeholder='Gebruikersnaam')
+            .form-group
+                input.form-control(name='password', type='password', placeholder='Wachtwoord')
+
+            input.btn.btn-default(class="btn-info" name='submit', type='submit', value='Login')
+            p.toRegister Nog niet geregistreerd?
+                a(href='/users/Register')  Maak een account aan

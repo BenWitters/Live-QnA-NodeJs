@@ -1,0 +1,116 @@
+extends layout
+
+block content
+   .showTopic
+      h1=topic.title
+         if errors
+            ul.errors
+               each error, i in errors
+                  li.alert.alert-danger #{error.msg}
+      div(class='row')
+      form.questionForm(method='post', action='')
+         input.topicId( name='topicId', type='hidden', value='#{topic._id}')
+         input.username( name='username', type='hidden', value='#{user.username}')
+         div.row
+         .form-group
+            input.form-control.questionField(type='text', name='question' placeholder='Stel hier je vraag')
+            input.btn.btn-default.btn-info.submitQuestion(id="submitQuestionId#{topic._id}" name='submit', type='submit', value='Vraag stellen')
+      div(class="allQuestions")
+      if topic.questions
+         each question, i in topic.questions
+            .question.col-sm-10
+               h3.question-text #{question.text}
+               p.question-name #{question.name}
+                  div.allAnswers
+                     div(class="allAnswers#{question._id}")
+                        if question.answers
+                           each answer, i in question.answers
+                              div.eachAnswer
+                                 h3.answer-text #{answer.text}
+                                 p.answer-name #{answer.name}
+               form.commentForm(method='post', action='')
+                  input(name='topicId', type='hidden', value='#{topic._id}')
+                  .form-group
+                     input.questionId( name='questionId', type='hidden', value='#{question._id}')
+                     input.usernameAnswer( name='usernameAnswer', type='hidden', value='#{user.username}')
+                     input.form-control.answerField.col-sm-10(id="answer#{question._id}", type='text', name='comment' placeholder='Schrijf hier je comment')
+                     input.btn.btn-default.btn-info.submitAnswer.col-sm-2(data-id="#{question._id}", name='submit', type='submit', value='Reageer')
+   //connect to server using socket.js file
+   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+   script(src='/socket.io/socket.io.js')
+   script.
+      $(document).ready(function(){
+         //socket functionality from socketjs file
+         var socket = io.connect();
+         // user question submit
+         var topicId = $('.topicId').val();
+         var $questionForm = $('#submitQuestionId' + topicId);
+         var $questionInput = $('.questionField');
+         var $question = $('.allQuestions');
+         var username = $('.username').val();
+         $questionForm.on('click', function(e){
+            e.preventDefault();
+            // send event to server
+            var date = new Date();
+            socket.emit('send question',{
+               question: $questionInput.val(),
+               name : username,
+               topicId: topicId,
+               date: date,
+               roomNumber: topicId
+            } );
+            $questionInput.val('');
+         });
+
+         // receive message on client side
+         socket.on('new question', function(data) {
+            if (data.question.length > 0 && data.username.length > 0) {
+
+            $question.prepend("<div class='question col-sm-10'><h3 class='question-text'>"+data.question+"</h3><p class='question-name'>"+data.username+"<div class='allAnswers'><div class='allAnswers"+data.qId+"'></div></div></p><form method='post' action='' class='commentForm'><input name='topicId' type='hidden' value='"+topicId+"'><div class='form-group'><input name='questionId' type='hidden' value="+ "'" +data.qId+ + "'" + "class='questionId'><input name='usernameAnswer' type='hidden' value='"+data.username+"'  class='usernameAnswer'><input id='answer"+data.qId+"' type='text' name='comment' placeholder='Schrijf hier je comment' class='form-control answerField col-sm-10'><input data-id='"+data.qId+"' name='submit' type='submit' value='Reageer' class='btn btn-default btn-info submitAnswer col-sm-2'></div></form></div>");
+            socket.leave(topicId);
+            }
+         });
+
+      });
+
+   script.
+      $(document).ready(function () {
+         //socket functionality from socketjs file
+         var socket = io.connect();
+         // user question submit
+
+
+         var $answerForm = $('.submitAnswer');
+         var topicId = $('.topicId').val();
+         var $answer = $('.allAnswers');
+
+
+         $(document).on('click', '.submitAnswer', function (e) {
+            e.preventDefault();
+
+            var current = $(this);
+            var questionId = current.data('id');
+            console.log(questionId);
+
+            var $answerInput = $('#answer' + questionId);
+            var usernameAnswer = $('.usernameAnswer').val();
+
+            // send event to server
+            var date = new Date();
+            socket.emit('send answer', {
+               answer: $answerInput.val(),
+               name: usernameAnswer,
+               questionId: questionId,
+               topicId: topicId,
+               date: date
+            });
+            $answerInput.val('');
+         });
+         // receive message on client side
+         socket.on('new answer', function (data) {
+            if (data.answer.length > 0 && data.username.length > 0) {
+               console.log(data.qId)
+               $('.allAnswers' + data.qId).append("<div class='eachAnswer'><h3 class='answer-text'>" + data.answer + "</h3><p class='answer-name'>" + data.username + "</p></div>");
+            }
+         });
+      });

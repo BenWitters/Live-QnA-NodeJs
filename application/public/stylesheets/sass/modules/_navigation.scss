@@ -1,0 +1,24 @@
+.navbar-default{
+  background-color: $RobinsEggBlue;
+}
+
+.navbar-default .navbar-brand{
+  color: #fff;
+}
+
+
+li a{
+  color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a{
+  color: #fff;
+}
+li.active{
+  background-color: #fff;
+}
+
+.navbar-default .navbar-nav>.active>a{
+  color: $RobinsEggBlue;
+  background-color: #fff;
+}

@@ -1,0 +1,8 @@
+extends layout
+block content
+    div(class="discussionForm")
+        h1 Nieuwe discussie starten
+        form(class="discussion" method='post', action='')
+            .form-group
+                input.form-control(name='topicName', type=text,  placeholder='Naam discussie/topic')
+                input.btn.btn-default(class="btn-info" name='submit', type='submit', value='Maak een nieuwe discussie aan')
